@@ -14,42 +14,37 @@ public class ArrayMultiset extends RmitMultiset
 
     protected ArrayElement array[]= null;
 
+    //objects of class ArrayElement will be used to store attributes of ArrayMultiset
     static class ArrayElement {
         String element;
         int instance;
 
+        //constructor
         ArrayElement(String elem) {
             element = elem;
             this.instance = 1;
         }
-    }
+    } // end of class ArrayElement
 
 
     @Override
     public void add(String elem) {
-        // Implement me!
         boolean found;
-        //int instance = 0;
+        //if array is null, add element to its 0th position
         if(array==null){
             ArrayElement arrayelem = new ArrayElement(elem);
             array = new ArrayElement[1];
             array[0] = arrayelem;
-            for (int i = 0; i < array.length; i++){
-                System.out.println("array is: " + array[i].element);
-            }
-        } else {
+        } else { //array is not null
             found = false;
+            //if element is already present in array, increment its instance count only
             for (ArrayElement arrayElement : array) {
-                System.out.println("for ele: " + arrayElement.element);
                 if (arrayElement.element.compareTo(elem) == 0) {
                     arrayElement.instance += 1;
-                    System.out.println("inst : " + arrayElement.instance);
                     found = true;
                 }
-                for (int i2 = 0; i2 < array.length; i2++) {
-                    System.out.println("array else is: " + array[i2].element);
-                }
             }
+            //add element to array, if it is not already present
             if (!found) {
                 ArrayElement newArray[] = new ArrayElement[array.length+1];
                 for (int i = 0; i < array.length; i++) {
@@ -58,21 +53,17 @@ public class ArrayMultiset extends RmitMultiset
                 // new entry, add to end of newArray
                 newArray[newArray.length-1] = new ArrayElement(elem);
                 array = newArray;
-                for (ArrayElement arrayElement : array) {
-                    System.out.println("array if found is: " + arrayElement.element);
-                }
             }
         }
     } // end of add()
 
+    /**
+     * Method to add object of ArrayElement to array
+     */
     public void add(ArrayElement arrayElement){
         if (array == null) {
-            //ArrayElement arrayelem = new ArrayElement(elem);
             array = new ArrayElement[1];
             array[0] = arrayElement;
-            for (int i = 0; i < array.length; i++){
-                System.out.println("array is: " + array[i].element);
-            }
         }
         else {
             ArrayElement newArray[] = new ArrayElement[array.length+1];
@@ -87,10 +78,10 @@ public class ArrayMultiset extends RmitMultiset
 
     @Override
     public int search(String elem) {
-        // Implement me!
         boolean found = false;
         int instances = 0;
 
+        //search elem in whole array, if found set boolean found to true and return number of instances.
         if(array!=null) {
             for (ArrayElement arrayElement : array) {
                 if (arrayElement.element.equals(elem)) {
@@ -112,9 +103,10 @@ public class ArrayMultiset extends RmitMultiset
 
         List<String> elementList = new ArrayList<String>();
 
+        //search all elements in array with required number of instances
+        // and if is found then add it to list and return
         if(array!=null) {
             for (ArrayElement arrayElement : array) {
-                //System.out.println("i: " + i);
                 if (arrayElement.instance == instanceCount) {
                     elementList.add(arrayElement.element);
                 }
@@ -126,8 +118,8 @@ public class ArrayMultiset extends RmitMultiset
 
     @Override
     public boolean contains(String elem) {
-        // Implement me!
         if(array!=null) {
+            //look for the required element in whole array and if found return true
             for (ArrayElement arrayElement : array) {
                 if (arrayElement.element.equals(elem)) {
                     return true;
@@ -146,6 +138,7 @@ public class ArrayMultiset extends RmitMultiset
             int j = 0;
             boolean found = false;
             for (i = 0; i < array.length; i++, i++) {
+                //if element is present decrement its number of instance by one
                 if (array[i].element.equals(elem)){
                     found = true;
                     array[i].instance -=1;
@@ -153,22 +146,19 @@ public class ArrayMultiset extends RmitMultiset
                     break;
                 }
             }
+
+            //if the element is found and after above decrement operation its instance became zero
+            //then remove that element from array
             if (found && instance == 0) {
-                System.out.println("i is: " + i);
                 ArrayElement newArray[] = new ArrayElement[array.length - 1];
                 for (j = 0; j < i; j++) {
-                    System.out.println("array[j] is: " + array[j].element);
                     newArray[j] = array[j];
                 }
                 for (int k = j + 1; k < array.length; k++) {
-                    System.out.println("array[k] is: " + array[k].element);
                     newArray[j] = array[k];
                     j++;
                 }
                 array = newArray;
-                for (i = 0; i < array.length; i++) {
-                    System.out.println("new array is: " + array[i].element);
-                }
             }
         }
     } // end of removeOne()
@@ -178,7 +168,9 @@ public class ArrayMultiset extends RmitMultiset
     public String print() {
         StringBuilder arrayOutput = new StringBuilder();
         if (array != null) {
+            //sorting array in descending order of their number of instances
             sortedArray(array);
+            //store all the element in required pattern into string builder and return
             for (ArrayElement arrayElement : array) {
                 arrayOutput.append(arrayElement.element).append(":").append(arrayElement.instance).append("\n");
             }
@@ -186,6 +178,10 @@ public class ArrayMultiset extends RmitMultiset
         return arrayOutput.toString();
     } // end of OrderedPrint
 
+    /**
+     * Method to sort array in descending order of their number of instances
+     * Early-termination bubble sorting is used.
+     */
     private void sortedArray(ArrayElement[] array) {
         int swapCounter = 0;
         ArrayElement temp;
@@ -211,6 +207,7 @@ public class ArrayMultiset extends RmitMultiset
 
         if (array != null) {
             for (ArrayElement arrayElement : array) {
+                //element within the given range including lower and upper are stored in string builder and returned
                 if (lower.compareTo(arrayElement.element) <= 0 && upper.compareTo(arrayElement.element) >= 0) {
                     arrayOutput.append(arrayElement.element).append(":").append(arrayElement.instance).append("\n");
                 }
@@ -224,34 +221,37 @@ public class ArrayMultiset extends RmitMultiset
     @Override
     public RmitMultiset union(RmitMultiset other) {
         if (other instanceof ArrayMultiset){
+            //newArray is created to store union of both the arrays
             ArrayMultiset newArray = new ArrayMultiset();
-            newArray.array = array;
 
-            ArrayElement array1[] = ((ArrayMultiset)other).array;
-
-            for (ArrayElement arrayElement : array1) {
-                System.out.println("array1: " + arrayElement.element);
+            //all elements of first array are store in third array
+            for (ArrayElement arrayElement : array) {
+                ArrayElement newArrayElement = new ArrayElement(arrayElement.element);
+                newArrayElement.instance = arrayElement.instance;
+                newArray.add(newArrayElement);
             }
-            for (int i = 0; i < array1.length; i++) {
+
+            //array of 'other' i.e. second Multiset is stored in otherArray
+            ArrayElement otherArray[] = ((ArrayMultiset)other).array;
+
+            //if element in otherArray is already in newArray then update only number of instances in newArray
+            //otherwise add that element in newArray
+            for (int i = 0; i < otherArray.length; i++) {
                 boolean found = false;
                 for (int j = 0; j < newArray.array.length; j++) {
-                    if (array1[i].element.equals(newArray.array[j].element)) {
+                    if (otherArray[i].element.equals(newArray.array[j].element)) {
                         found = true;
-                        newArray.array[j].instance += array1[i].instance;
+                        newArray.array[j].instance += otherArray[i].instance;
                         break;
                     }
                 }
                 if (!found) {
-                    newArray.add(array1[i]);
-                }
-                for (int j = 0; j < newArray.array.length; j++) {
-                    System.out.println("newest array: " + newArray.array[j]);
+                    newArray.add(otherArray[i]);
                 }
             }
 
             return newArray;
         }
-        // Placeholder, please update
         return null;
     } // end of union()
 
@@ -261,14 +261,15 @@ public class ArrayMultiset extends RmitMultiset
         if (other instanceof ArrayMultiset) {
             ArrayMultiset newArray = new ArrayMultiset();
             ArrayElement otherArray[] = ((ArrayMultiset) other).array;
-            System.out.println("arr1 l: " + otherArray.length);
-            for (int i = 0; i < array.length; i++) {
-                for (int j = 0; j < otherArray.length; j++) {
-                    if (array[i].element.equals(otherArray[j].element)) {
-                        if (array[i].instance < otherArray[j].instance) {
-                            newArray.add(array[i]);
+            for (ArrayElement arrayElement : array) {
+                for (ArrayElement element : otherArray) {
+                    if (arrayElement.element.equals(element.element)) {
+                        //if element is present in both arrays, then add that element in newArray
+                        //with its lowest number of instances
+                        if (arrayElement.instance < element.instance) {
+                            newArray.add(arrayElement);
                         } else {
-                            newArray.add(otherArray[j]);
+                            newArray.add(element);
                         }
                     }
                 }
@@ -284,18 +285,18 @@ public class ArrayMultiset extends RmitMultiset
         if (other instanceof ArrayMultiset){
             ArrayMultiset newArray = new ArrayMultiset();
             ArrayElement otherArray[] = ((ArrayMultiset)other).array;
-            System.out.println("arr1 l: " + otherArray.length);
             int j = 0;
             for (int i = 0; i < array.length; i++) {
                 boolean found = false;
                 for (j = 0; j < otherArray.length; j++) {
-                    System.out.println("other ele: " + otherArray[j]);
                     if (array[i].element.equals(otherArray[j].element)) {
                         found = true;
                         break;
                     }
                 }
                 if (found) {
+                    //if element is present in both arrays and number of instances of that element in first array
+                    // is greater than that of second array, then store the element in newArray with difference
                     if (array[i].instance - otherArray[j].instance > 0) {
                         ArrayElement newArrayElement = new ArrayElement(array[i].element);
                         newArrayElement.instance = array[i].instance - otherArray[j].instance;
@@ -303,20 +304,19 @@ public class ArrayMultiset extends RmitMultiset
                     }
                 }
                 else {
+                    //if array element from first array is not present in second array, add the element as it is
+                    //in newArray
                     newArray.add(array[i]);
                 }
             }
-            for (j = 0; j < newArray.array.length; j++) {
-                System.out.println("newest array: " + newArray.array[j]);
-            }
-
             return newArray;
         }
         return null;
     } // end of difference()
 
+    //method is not required in this Multiset
     @Override
-    protected void add(Node node) {
+    public void add(Node node) {
 
     }
 

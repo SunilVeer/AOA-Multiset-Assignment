@@ -23,29 +23,27 @@ public class OrderedLinkedListMultiset extends RmitMultiset
         Node current = head;
         Node previous = null;
         boolean found = false;
-        while(current != null && item.compareTo(current.i) >= 0) {
-            if (item.compareTo(current.i) == 0){
-                found = true;
-                break;
+        //check if element is already present
+        while(current != null) {
+            if(item.compareTo(current.i) >= 0) {
+                if (item.compareTo(current.i) == 0) {
+                    found = true;
+                    break;
+                }
             }
-            System.out.println("current: " + current.i);
             previous = current;
             current = current.next;
-            //System.out.println("after current: " + current.i);
         }
 
-        if (found){
+        if (found){ //increment number of instance by one as element is already present
             current.instance++;
         }
-        else if(previous == null){
+        else if(previous == null){ //ordered linked list is null so add the element as head
             Node newNode = new Node(item);
-            System.out.println("current else if: " + newNode.i);
             head = newNode;
             newNode.next = current;
-        } else {
+        } else { //add the element after head and so on
             Node newNode = new Node(item);
-            //System.out.println("current else: " + current.i);
-            System.out.println("prev else: " + previous.i);
             previous.next = newNode;
             newNode.next = current;
         }
@@ -61,17 +59,13 @@ public class OrderedLinkedListMultiset extends RmitMultiset
                 found = true;
                 break;
             }
-            System.out.println("current: " + current.i);
             previous = current;
             current = current.next;
-            //System.out.println("after current: " + current.i);
     }
 
-    if (found){
+    if (found){//increment number of instance by one as element is already present
         current.instance+= node.instance;
-    }
-    else if(previous == null){
-        System.out.println("current else if: " + node.i);
+    } else if(previous == null){ //ordered linked list is null so add the element as head
         //cannot assign node directly to head and do further operations
         //as further operation like node.next = current was changing original node
         //so first created duplicate of node and then assigned and performed further operations
@@ -80,9 +74,7 @@ public class OrderedLinkedListMultiset extends RmitMultiset
         newNode.next = node.next;
         head = newNode;
         newNode.next = current;
-    } else {
-        //System.out.println("current else: " + current.i);
-        System.out.println("prev else: " + previous.i);
+    } else { //add the element after head and so on
         Node newNode = new Node(node.i);
         newNode.instance = node.instance;
         newNode.next = node.next;
@@ -90,9 +82,9 @@ public class OrderedLinkedListMultiset extends RmitMultiset
         newNode.next = current;
     }
 }
+
     @Override
 	public int search(String item) {
-        // Implement me!
         int searchedInstance = 0;
         boolean found = false;
         Node current = head;
@@ -116,11 +108,12 @@ public class OrderedLinkedListMultiset extends RmitMultiset
         Node current = head;
         List<String> elementList = new ArrayList<String>();
 
+        //search all elements in ordered linked list with required number of instances
+        // and if is found then add it to list and return
         while(current != null) {
             if (current.instance == instanceCount) {
                 elementList.add(current.i);
             }
-            System.out.println("current : " + current.i);
             current = current.next;
         }
         return elementList;
@@ -129,28 +122,29 @@ public class OrderedLinkedListMultiset extends RmitMultiset
 
     @Override
 	public boolean contains(String item) {
-        // Implement me!
         Node current = head;
+        //look for the required element in whole ordered linked list and if found return true
         while(current != null) {
             if(current.i.equals(item)){
                 return true;
             }
             current = current.next;
         }
-        // Placeholder, please update.
         return false;
     } // end of contains()
 
 
     @Override
 	public void removeOne(String item) {
-        // Implement me!
         Node current = head;
         Node previous = null;
         while(current != null) {
-            if (current.i.equals(item)){
+            if (current.i.equals(item)){ //if element is present decrement its number of instance by one
                 current.instance--;
+                //if the element is found and after above decrement operation its instance became zero
+                //then remove that element from array
                 if (current.instance == 0) {
+                    //if removed element is head, update the head by its next node
                     if (current == head) {
                         head = current.next;
                         break;
@@ -171,37 +165,41 @@ public class OrderedLinkedListMultiset extends RmitMultiset
     @Override
 	public String print() {
         StringBuilder nodes = new StringBuilder();
+        //sorting ordered linked list in descending order of their number of instances
         sortedLinkedList();
         Node current = head;
+        //store all the element in required pattern into string builder and return
         while(current != null){
             nodes.append(current.i).append(":").append(current.instance).append("\n");
             current = current.next;
         }
-        // Placeholder, please update.
         return nodes.toString();
     } // end of OrderedPrint
 
+    /**
+     * Method to sort ordered linked list in descending order of their number of instances
+     */
     public void sortedLinkedList(){
-        Node current = head;
-        Node next = head.next;
-        Node previous = null;
-        boolean isChanged = false;
-
+        boolean isChanged;
         do {
+            Node current = head;
+            Node previous = null;
+            Node next = head.next;
             isChanged = false;
-            while ( next != null ) {
+
+            while (next != null) {
                 if (current.instance < next.instance) {
                     isChanged = true;
-                    if ( previous != null ) {
-                        Node tempNode = next.next;
+                    if (previous != null) {
+                        Node temp = next.next;
                         previous.next = next;
                         next.next = current;
-                        current.next = tempNode;
+                        current.next = temp;
                     } else {
-                        Node tempNode = next.next;
+                        Node temp = next.next;
                         head = next;
                         next.next = current;
-                        current.next = tempNode;
+                        current.next = temp;
                     }
                     previous = next;
                     next = current.next;
@@ -211,8 +209,7 @@ public class OrderedLinkedListMultiset extends RmitMultiset
                     next = next.next;
                 }
             }
-        } while( isChanged );
-
+        } while (isChanged);
     }
 
     @Override
@@ -220,8 +217,8 @@ public class OrderedLinkedListMultiset extends RmitMultiset
         StringBuilder nodes = new StringBuilder();
         Node current = head;
         while(current != null) {
+            //element within the given range including lower and upper are stored in string builder and returned
             if (lower.compareTo(current.i) <= 0 && upper.compareTo(current.i) >= 0) {
-                System.out.println("current: " + current.i);
                 if (current.next != null) {
                     if (!current.i.equals(current.next.i)) {
                         nodes.append(current.i).append(":").append(search(current.i)).append("\n");
@@ -232,7 +229,6 @@ public class OrderedLinkedListMultiset extends RmitMultiset
             }
             current = current.next;
         }
-        // Placeholder, please update.
         return nodes.toString();
     } // end of printRange()
 
@@ -240,15 +236,24 @@ public class OrderedLinkedListMultiset extends RmitMultiset
     @Override
 	public RmitMultiset union(RmitMultiset other) {
         if (other instanceof OrderedLinkedListMultiset) {
+
+            //newOrderedLinkedList is created to store union of both the ordered linked list
             OrderedLinkedListMultiset newOrderedLinkedList = new OrderedLinkedListMultiset();
             Node currentNode = head;
+
+            //all elements of first ordered linked list are store in third ordered linked list
             while (currentNode != null) {
                 newOrderedLinkedList.add(currentNode);
                 currentNode = currentNode.next;
             }
             OrderedLinkedListMultiset otherOrderedLinkedList = (OrderedLinkedListMultiset) other;
+
+            //'other' ordered linked list is stored in otherOrderedLinkedList
             Node otherNode = otherOrderedLinkedList.head;
             boolean found;
+
+            //if element in otherOrderedLinkedList is already in newOrderedLinkedList then update
+            // only number of instances in newOrderedLinkedList otherwise add that element in newOrderedLinkedList
             while (otherNode != null) {
                 found = false;
                 currentNode = newOrderedLinkedList.head;
@@ -283,6 +288,8 @@ public class OrderedLinkedListMultiset extends RmitMultiset
             while (currentNode != null) {
                 otherNode = otherOrderedLinkedList.head;
                 while (otherNode != null) {
+                    //if element is present in both ordered linked list, then add that element
+                    // in newOrderedLinkedList with its lowest number of instances
                     if (currentNode.i.equals(otherNode.i)) {
                         if (currentNode.instance < otherNode.instance) {
                             newOrderedLinkedList.add(currentNode);
@@ -320,6 +327,9 @@ public class OrderedLinkedListMultiset extends RmitMultiset
                 }
 
                 if (found) {
+                    //if element is present in both ordered linked list and number of instances of that element
+                    // in first ordered linked list is greater than that of second ordered linked list,
+                    // then store the element in newOrderedLinkedList with difference
                     if (currentNode.instance - otherNode.instance > 0) {
                         Node newNode = new Node(currentNode.i);
                         newNode.instance = currentNode.instance - otherNode.instance;
@@ -327,6 +337,8 @@ public class OrderedLinkedListMultiset extends RmitMultiset
                         newOrderedLinkedList.add(newNode);
                     }
                 } else {
+                    //if ordered linked list element from first ordered linked list is not present
+                    // in second ordered linked list, add the element as it is in newOrderedLinkedList
                     newOrderedLinkedList.add(currentNode);
                 }
 

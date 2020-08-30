@@ -113,6 +113,11 @@ public abstract class RmitMultiset
 	 */
 	public abstract RmitMultiset difference(RmitMultiset other);
 
-    protected abstract void add(Node node);
+	/**
+	 * Add a node into multiset.
+	 *
+	 * @param node Element to add.
+	 */
+    public abstract void add(Node node);
 
 } // end of abstract class RmitMultiset

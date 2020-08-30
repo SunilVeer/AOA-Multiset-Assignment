@@ -1,6 +1,5 @@
 package implementation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +14,6 @@ public class DualLinkedListMultiset extends RmitMultiset
     private Node head;
     //head for linked list ordered by instance count.
     private Node secondHead;
-    StringBuilder nodes = new StringBuilder();
     OrderedLinkedListMultiset orderedLinkedList = new OrderedLinkedListMultiset();
 
     public DualLinkedListMultiset(){
@@ -26,215 +24,139 @@ public class DualLinkedListMultiset extends RmitMultiset
 
     @Override
 	public void add(String item) {
-        // Implement me!
+        //add element in first linked list among two
         orderedLinkedList.add(item);
 
+        //add element in second linked list among two
         Node current = secondHead;
-        //orderedLinkedList.add((RmitMultiset)current);
         Node previous = null;
         boolean found = false;
         while(current != null) {
-            System.out.println("current in while: " + current.i);
             if (item.compareTo(current.i) == 0){
                 found = true;
                 break;
             }
-            //System.out.println("current: " + current.i);
             previous = current;
             current = current.next;
-            //System.out.println("after current: " + current.i);
         }
 
-        if (found){
-            if (previous!=null)
-            System.out.println("prev : " + previous.i);
+        if (found){ //increment number of instance by one as element is already present
             current.instance++;
             if (current.next != null) {
-                Node previousNode = previous;
                 Node currentNode = current;
-                found = false;
                 while (current.next != null) {
-                    //&& currentNode.instance > (current.next.instance)) {
                     if (currentNode.instance < current.next.instance) {
-                        found = true;
+                        //if above condition is true then break so we can get current node
+                        // to perform further operations
                         break;
                     }
-                    previous = current;
-                    System.out.println("previous : " + previous.i);
                     current = current.next;
-                    //System.out.println("after current: " + current.i);
                 }
 
-                if (found) {
-                    if (previous != null)
-                        System.out.println("previous outside : " + previous.i);
-                    if (current!=null)
-                        System.out.println("current outside : " + current.i);
-                } else {
-                    if (previous != null)
-                        System.out.println("previous else : " + previous.i);
-                    if (current!=null)
-                        System.out.println("current else : " + current.i);
-                }
-
-
-                if (currentNode != null)
-                System.out.println("currentNode.i : " + currentNode.i);
-                if (previous != null)
-                System.out.println("previous.i : " + previous.i);
-
-
+                // if we get current and currentNode same, then don't need to change its position while adding
+                //as linked list is already sorted by number of instances
                 if (!currentNode.i.equals(current.i)) {
+                    //swap the nodes to keep linked list sorted by number of instances
                     String temp = currentNode.i;
                     currentNode.i = current.i;
                     current.i = temp;
                     int temp1 = currentNode.instance;
                     currentNode.instance = current.instance;
                     current.instance = temp1;
-
                 }
             }
         } else {
+            //if not found then add it as a head
+            //adding this at head as now added node has only one instance and sorted list can be maintained
             Node newNode = new Node(item);
-            //System.out.println("current else if: " + newNode.i);
             newNode.next = secondHead;
             secondHead = newNode;
         }
-
-        //remove second linked list
-        current = secondHead;
-        while(current != null) {
-            System.out.println("current 2 is: " + current.i + " " + current.instance);
-            current = current.next;
-        }
-
     } // end of add()
 
     @Override
     public void add(Node node) {
+        //add element in first linked list among two
         orderedLinkedList.add(node);
 
+        //add element in second linked list among two
         Node current = secondHead;
-        //orderedLinkedList.add((RmitMultiset)current);
         Node previous = null;
         boolean found = false;
         while(current != null) {
-            System.out.println("current in while: " + current.i);
             if (node.i.compareTo(current.i) == 0){
                 found = true;
                 break;
             }
-            //System.out.println("current: " + current.i);
             previous = current;
             current = current.next;
-            //System.out.println("after current: " + current.i);
         }
 
-        if (found){
-            if (previous!=null)
-                System.out.println("prev : " + previous.i);
+        if (found){ //increment number of instance by one as element is already present
             current.instance++;
             if (current.next != null) {
                 Node previousNode = previous;
                 Node currentNode = current;
-                found = false;
                 while (current.next != null) {
-                    //&& currentNode.instance > (current.next.instance)) {
                     if (currentNode.instance < current.next.instance) {
-                        found = true;
+                        //if above condition is true then break so we can get current node
+                        // to perform further operations
                         break;
                     }
-                    previous = current;
-                    System.out.println("previous : " + previous.i);
                     current = current.next;
-                    //System.out.println("after current: " + current.i);
                 }
 
-                if (found) {
-                    if (previous != null)
-                        System.out.println("previous outside : " + previous.i);
-                    if (current!=null)
-                        System.out.println("current outside : " + current.i);
-                } else {
-                    if (previous != null)
-                        System.out.println("previous else : " + previous.i);
-                    if (current!=null)
-                        System.out.println("current else : " + current.i);
-                }
-
-
-                if (currentNode != null)
-                    System.out.println("currentNode.i : " + currentNode.i);
-                if (previous != null)
-                    System.out.println("previous.i : " + previous.i);
-
-
+                // if we get current and currentNode same, then don't need to change its position while adding
+                //as linked list is already sorted by number of instances
                 if (!currentNode.i.equals(current.i)) {
-                    //||previousNode == null) {
+                    //swap the nodes to keep linked list sorted by number of instances
                     if (previousNode == null) {
                         secondHead = currentNode.next;
-                        System.out.println("second head : " + secondHead.i);
-                        //secondHead.next = currentNode;
                     } else {
                         previousNode.next = currentNode.next;
-                        if (previousNode.next != null)
-                            System.out.println("previousNode else : " + previousNode.next.i);
                     }
-                    //if (current.next!=null){
                     currentNode.next = current.next;
-                    if (currentNode.next != null)
-                        System.out.println("currentNode if  : " + currentNode.next.i);
-                    //}
                     current.next = currentNode;
-                    if (current.next != null)
-                        System.out.println("current if  : " + current.next.i);
                 }
             }
         } else {
-            //Node newNode = new Node(item);
-            //System.out.println("current else if: " + newNode.i);
+            //if not found then add it as a head
+            //adding this at head as now added node has only one instance and sorted list can be maintained
             node.next = secondHead;
             secondHead = node;
-        }
-
-        //print second linked list
-        current = secondHead;
-        while(current != null) {
-            System.out.println("current 2 is: " + current.i + " " + current.instance);
-            current = current.next;
         }
     }
 
 
     @Override
     public int search(String item) {
+        //as we can use first linked list among two, which is similar to orderedlinkedlist, to search an element
+        //search method of orderedLinkedList is called and output is returned
         return orderedLinkedList.search(item);
     } // end of search()
 
 
     @Override
     public List<String> searchByInstance(int instanceCount) {
+        //as we can use first linked list among two, which is similar to orderedlinkedlist, to search an element
+        //by its instance count, searchByInstance method of orderedLinkedList is called and output is returned
         return orderedLinkedList.searchByInstance(instanceCount);
     } // end of searchByInstance
 
 
     @Override
     public boolean contains(String item) {
+        //as we can use first linked list among two, which is similar to orderedlinkedlist, to check
+        // whether the element is present in duallinkedlist,
+        // contains method of orderedLinkedList is called and output is returned
         return orderedLinkedList.contains(item);
     } // end of contains()
 
 
     @Override
     public void removeOne(String item) {
-        // Implement me!
             //remove from first linked list
             orderedLinkedList.removeOne(item);
-
-            Node currentFirstLinkedList = orderedLinkedList.head;
-            while (currentFirstLinkedList != null) {
-                System.out.println("current 1 is: " + currentFirstLinkedList.i + " " + currentFirstLinkedList.instance);
-                currentFirstLinkedList = currentFirstLinkedList.next;
-            }
 
             //remove from second linked list
             boolean found = false;
@@ -243,51 +165,39 @@ public class DualLinkedListMultiset extends RmitMultiset
             while (current != null) {
                 if (item.equals(current.i)) {
                     current.instance--;
+                    //if the element is found and after above decrement operation its instance became zero
+                    //then remove that element from dual linked list
                     if (current.instance == 0) {
-                        //removed node is a head node
-                        if (previous == null){
+                        if (previous == null){ //removed node is a head node
                             secondHead = current.next;
-                        } else {
+                        } else { //removed node is not a head node
                             previous.next = current.next;
                         }
                     } else {
-                        //removed node is not a head node
-                        System.out.println("in else");
                         Node currentNode = secondHead;
                         Node previousNode = null;
                         while (currentNode != null) {
-                            System.out.println("while currentNode : " + currentNode.i);
                             if (currentNode.instance >= current.instance) {
+                                //if above condition is true then break so we can get currentNode
+                                // to perform further operations
                                 break;
                             }
                             previousNode = currentNode;
                             currentNode = currentNode.next;
                         }
 
-                        if (previousNode != null)
-                            System.out.println("previousNode : " + previousNode.i);
-                        if (currentNode != null)
-                            System.out.println("currentNode : " + currentNode.i);
-
+                        //swap the nodes to keep linked list sorted by number of instances
                         if (previousNode == null){
                             if(previous != null) {
                                 previous.next = current.next;
                             }
                             current.next = currentNode;
                             secondHead = current;
-
                         }
                         break;
                     }
                 }
-                //System.out.println("current 2 is: " + current.i + " " + current.instance);
                 previous = current;
-                current = current.next;
-            }
-            //print second linked list
-            current = secondHead;
-            while (current != null) {
-                System.out.println("current 2 is: " + current.i + " " + current.instance);
                 current = current.next;
             }
     } // end of removeOne()
@@ -295,22 +205,16 @@ public class DualLinkedListMultiset extends RmitMultiset
 
     @Override
     public String print() {
-        nodes = new StringBuilder();
-        return printDualLinkedList(secondHead);
+        //as we can use first linked list among two, which is similar to orderedlinkedlist, to print all elements
+        //print method of orderedLinkedList is called and output is returned
+        return orderedLinkedList.print();
     } // end of OrderedPrint
-
-    //printing second linked list in reversed order using recursion as it is in ascending order
-    private String printDualLinkedList(Node node) {
-        if (node == null)
-            return "";
-        printDualLinkedList(node.next);
-        nodes.append(node.i).append(":").append(node.instance).append("\n");
-        return nodes.toString();
-    }
 
 
     @Override
     public String printRange(String lower, String upper) {
+        //as we can use first linked list among two, which is similar to orderedlinkedlist, to print all elements
+        //printRange method of orderedLinkedList is called and output is returned
         return orderedLinkedList.printRange(lower, upper);
     } // end of printRange()
 
@@ -318,25 +222,28 @@ public class DualLinkedListMultiset extends RmitMultiset
     @Override
 	public RmitMultiset union(RmitMultiset other) {
         if (other instanceof DualLinkedListMultiset) {
+            //newDualLinkedList is created to store union of both the ordered linked list
             DualLinkedListMultiset newDualLinkedList = new DualLinkedListMultiset();
             Node currentFirstLinkedList = orderedLinkedList.head;
+
             while(currentFirstLinkedList != null) {
-                // add comment
+                // created newNode and then added in newDualLinkedList
                 Node newNode = new Node(currentFirstLinkedList.i);
                 newNode.instance = currentFirstLinkedList.instance;
                 newNode.next = currentFirstLinkedList.next;
                 newDualLinkedList.add(newNode);
-                //System.out.println("current 1 is: " + currentFirstLinkedList.i + " " + currentFirstLinkedList.instance);
                 currentFirstLinkedList = currentFirstLinkedList.next;
             }
-            DualLinkedListMultiset otherOrderedLinkedList = (DualLinkedListMultiset) other;
-            Node otherNode = otherOrderedLinkedList.orderedLinkedList.head;
+
+            DualLinkedListMultiset otherDualLinkedList = (DualLinkedListMultiset) other;
+            //head of 'other' ordered linked list is stored in otherNode
+            Node otherNode = otherDualLinkedList.orderedLinkedList.head;
             boolean found;
-            System.out.println("otherNode : " + otherNode.i);
+            //if element in otherDualLinkedList is already in newDualLinkedList then update
+            // only number of instances in newDualLinkedList otherwise add that element in newDualLinkedList
             while (otherNode != null) {
                 found = false;
                 currentFirstLinkedList = newDualLinkedList.orderedLinkedList.head;
-                System.out.println("currentFirstLinkedList : " + currentFirstLinkedList.i);
                 while (currentFirstLinkedList != null) {
                     if (otherNode.i.equals(currentFirstLinkedList.i)) {
                         found = true;
@@ -347,7 +254,6 @@ public class DualLinkedListMultiset extends RmitMultiset
                 if (found){
                     currentFirstLinkedList.instance += otherNode.instance;
                 } else {
-                    System.out.println("otherNode 2 : " + otherNode.i);
                     Node newNode = new Node(otherNode.i);
                     newNode.instance = otherNode.instance;
                     newNode.next = otherNode.next;
@@ -355,6 +261,7 @@ public class DualLinkedListMultiset extends RmitMultiset
                 }
                 otherNode = otherNode.next;
             }
+
             return newDualLinkedList;
         }
         return null;
@@ -371,6 +278,8 @@ public class DualLinkedListMultiset extends RmitMultiset
             while (currentNode != null) {
                 otherNode = otherDualLinkedList.orderedLinkedList.head;
                 while (otherNode != null) {
+                    //if element is present in both ordered linked list, then add that element
+                    // in newOrderedLinkedList with its lowest number of instances
                     if (currentNode.i.equals(otherNode.i)) {
                         if (currentNode.instance < otherNode.instance) {
                             Node newNode = new Node(currentNode.i);
@@ -390,7 +299,6 @@ public class DualLinkedListMultiset extends RmitMultiset
             }
             return newDualLinkedList;
         }
-        // Placeholder, please update.
         return null;
     } // end of intersect()
 
@@ -415,6 +323,9 @@ public class DualLinkedListMultiset extends RmitMultiset
                 }
 
                 if (found) {
+                    //if element is present in both dual linked list and number of instances of that element
+                    // in first dual linked list is greater than that of second dual linked list,
+                    // then store the element in newDualLinkedList with difference
                     if (currentNode.instance - otherNode.instance > 0) {
                         Node newNode = new Node(currentNode.i);
                         newNode.instance = currentNode.instance - otherNode.instance;
@@ -422,6 +333,8 @@ public class DualLinkedListMultiset extends RmitMultiset
                         newDualLinkedList.add(newNode);
                     }
                 } else {
+                    //if dual linked list element from first dual linked list is not present
+                    // in second dual linked list, add the element as it is in newDualLinkedList
                     Node newNode = new Node(currentNode.i);
                     newNode.instance = currentNode.instance;
                     newNode.next = currentNode.next;
