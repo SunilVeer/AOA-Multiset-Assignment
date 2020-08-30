@@ -24,10 +24,10 @@ public class DualLinkedListMultiset extends RmitMultiset
 
     @Override
 	public void add(String item) {
-        //add element in first linked list among two
+        //add element in first linked list among two, stored in ascending order of the elements
         orderedLinkedList.add(item);
 
-        //add element in second linked list among two
+        //add element in second linked list among two, stored in ascending order of number of instances
         Node current = secondHead;
         Node previous = null;
         boolean found = false;
